@@ -1,7 +1,9 @@
 const mongodb = require('mongodb');
+const sanitizeHTML = require('sanitize-html');
 
 const handleUpdate = (req, res, DB) => {
-    DB.collection('items').updateOne({_id: new mongodb.ObjectID(req.body.id)}, {$set: {text: req.body.text}}, () => {
+    const safeInput = sanitizeHTML(req.body.text, {allowedTags: [], allowedAttributes: {}});
+    DB.collection('items').updateOne({_id: new mongodb.ObjectID(req.body.id)}, {$set: {text: safeInput}}, () => {
         res.redirect('/');
       })
 }
