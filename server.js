@@ -29,7 +29,7 @@ app.use(express.static('views'))
 app.set("view engine", "ejs");
 
 app.get('/', (req, res) => {
-  read.handleRead(req, res, DB);
+  read.handleRead(req, res, DB)
 })
 
 app.post('/create-item', (req, res) => {
