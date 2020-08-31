@@ -3,6 +3,13 @@ const mongodb = require('mongodb');
 const dotenv = require('dotenv');
 dotenv.config();
 
+//IMPORT CONTROLLERS
+const create = require('./controllers/create');
+const deleteItem = require('./controllers/delete');
+const update = require('./controllers/update');
+const read = require('./controllers/read');
+
+
 const app = express();
 const PORT = 3000;
 let DB;
@@ -22,26 +29,18 @@ app.use(express.static('views'))
 app.set("view engine", "ejs");
 
 app.get('/', (req, res) => {
-  DB.collection('items').find().toArray((err, items) => {
-    res.render('todo.ejs', {todoTasks: items});
-  });
+  read.handleRead(req, res, DB);
 })
 
 app.post('/create-item', (req, res) => {
-  DB.collection('items').insertOne({text: req.body.item}, () => {
-    res.redirect('/');
-  })
+  create.handleCreate(req, res, DB);
 })
 
 app.post('/update-item', (req, res) => {
-  DB.collection('items').updateOne({_id: new mongodb.ObjectID(req.body.id)}, {$set: {text: req.body.text}}, () => {
-    res.redirect('/');
-  })
+  update.handleUpdate(req, res, DB);
 })
 
 app.post('/delete-item', (req, res) => {
-  DB.collection('items').deleteOne({_id: new mongodb.ObjectID(req.body.id)}, () => {
-    res.redirect('/');
-  })
+  deleteItem.handleDelete(req, res, DB);
 })
 
