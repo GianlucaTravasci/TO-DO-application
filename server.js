@@ -28,7 +28,17 @@ app.use(express.static('views'))
 
 app.set("view engine", "ejs");
 
-app.get('/', (req, res) => {
+function passwordProtected(req, res, next) {
+  res.set('WWW-Authenticate', 'Basic realm="Simple to do App"')
+  if (req.headers.authorization == 'Basic R2lhbmx1Y2E6Z2lhbmx1Y2E=') {
+    next()
+  } else {
+    res.status(401).send("Authrntication required")
+  }
+  //console.log('costum fun');
+}
+
+app.get('/', passwordProtected, (req, res) => {
   read.handleRead(req, res, DB)
 })
 
